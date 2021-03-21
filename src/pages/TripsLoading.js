@@ -26,7 +26,7 @@ class TripsLoading extends Component {
   handleSubmit = e => {
     e.preventDefault()
 
-    ApiCall("loading/",this.state)
+    ApiCall("/trip/start-trip",this.state)
     .then(res => {
       console.log(res.data)
       this.setState({redirect:true})

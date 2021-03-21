@@ -2,14 +2,14 @@ import axios from "axios";
 
 export function PostData(type, data) {
 
-  let BaseUrl = "https://smokin-ace.herokuapp.com/account/"
-  // let BaseUrl = "http://127.0.0.1:8000/account/"
+  // let BaseUrl = "https://smokin-ace.herokuapp.com/account/"
+  let BaseUrl = "http://192.168.0.103:6505/account"
 
   if (data==='') {
     return new Promise((resolve, reject) => {
       axios.get(BaseUrl + type, {
       headers: {
-        'Authorization': `token ${sessionStorage.getItem('token')}`
+        'Authorization': `Bearer ${sessionStorage.getItem('tokens')}`
       }
     })
       .then((response) => {

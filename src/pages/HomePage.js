@@ -13,14 +13,16 @@ import {
 
 function HomePage() {
   const [data, setData] = useState([])
-  const [selected, setSelected] = useState('1')
+  const [selected, setSelected] = useState('')
   const [trips, setTrips] = useState({})
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     const getData = async() =>{
-      await ApiCall("loading/",'').then(result =>{
-          setData(result.data);      })
+      await ApiCall("trip?filter=ongoing", '')
+        .then(result => {
+        setData(result.data['results']);
+      })
       .catch((err) => {
           console.log(err);
       })
@@ -31,7 +33,7 @@ function HomePage() {
 
   useEffect(() => {
     const loadData = async() =>{
-      await ApiCall(`loading/${selected}/`,'')
+      await ApiCall(`trip/detail-view?request_id=${selected}`,'')
       .then(result =>{
           setTrips(result.data);
           setLoaded(true)
@@ -49,7 +51,7 @@ function HomePage() {
   const handleChange = async (event) => {
     const sValue = event.target.value
 
-    await ApiCall(`loading/${sValue}/`,'')
+    await ApiCall(`trip/detail-view?request_id=${sValue}`,'')
     .then(result =>{
         setTrips(result.data);
         setLoaded(true)

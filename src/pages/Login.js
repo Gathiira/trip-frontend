@@ -7,7 +7,7 @@ class Login extends Component {
   constructor(props){
     super(props);
     this.state = {
-      username: '',
+      email: '',
       password: '',
       redirect:false,
     };
@@ -17,12 +17,14 @@ class Login extends Component {
 
   handleLogin = e => {
     e.preventDefault();
-    if (this.state.username && this.state.password) {
-      PostData("login/",this.state).then((result) =>{
-        let responseJson = result;
-        if (responseJson.user) {
-          sessionStorage.setItem('token', responseJson.token);
-          sessionStorage.setItem('user',responseJson);
+    if (this.state.email && this.state.password) {
+      PostData("/user/login",this.state).then((result) =>{
+        let responseJson = result.data;
+        console.log(responseJson)
+        if (responseJson) {
+
+          sessionStorage.setItem('tokens', responseJson.tokens.access);
+          sessionStorage.setItem('user',responseJson.email);
           this.setState({redirect:true})
         } else {
           console.log("Wrong credentials")
@@ -51,7 +53,7 @@ class Login extends Component {
                 <input
                   required={true}
                   type="text"
-                  name="username"
+                  name="email"
                   placeholder='Username'
                   onChange={this.handleChange}/>
                 <input

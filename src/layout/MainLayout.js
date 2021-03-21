@@ -44,8 +44,8 @@ class Header extends Component {
   }
 
   componentDidMount(){
-    if (sessionStorage.getItem("user")) {
-      PostData('user','').then((resp) =>{
+    if (sessionStorage.getItem("tokens")) {
+      PostData('/user/get-authentication-status','').then((resp) =>{
         this.setState({is_staff:resp.data.is_staff, username:resp.data.username})
       }).catch((err) =>{
         alert('unauthorised access')
@@ -95,7 +95,7 @@ class Body extends Component {
           <Content>
               {this.props.content}
           </Content>
-          <Footer className='text-center'>©2020</Footer>
+          <Footer className='text-center'>©2021</Footer>
       </Layout>
     );
   }

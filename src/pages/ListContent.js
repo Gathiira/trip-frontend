@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 class ListContent extends Component {
 
@@ -15,8 +15,8 @@ class ListContent extends Component {
 
     deleteTrip = e =>{
         e.preventDefault()
-        // let url = `http://127.0.0.1:8000/api/loading/${this.props.trips['id']}/`
-        let url = `https://smokin-ace.herokuapp.com/api/loading/${this.props.trips['id']}/`
+        let url = `http://192.168.0.103:6505/api/loading/${this.props.trips['id']}/`
+        // let url = `https://smokin-ace.herokuapp.com/api/loading/${this.props.trips['id']}/`
         Axios.delete(url)
 
         this.setState({
