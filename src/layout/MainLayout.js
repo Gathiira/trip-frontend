@@ -45,8 +45,8 @@ class Header extends Component {
 
   componentDidMount(){
     if (sessionStorage.getItem("tokens")) {
-      PostData('/user/get-authentication-status','').then((resp) =>{
-        this.setState({is_staff:resp.data.is_staff, username:resp.data.username})
+      PostData('/user/get-authentication-status', '').then((resp) => {
+        this.setState({is_staff:resp.data.data.is_staff, username:resp.data.data.username})
       }).catch((err) =>{
         alert('unauthorised access')
       })
@@ -91,7 +91,7 @@ class Header extends Component {
 class Body extends Component {
   render(){
     return(
-      <Layout>
+      <Layout className="main_layout_container">
           <Content>
               {this.props.content}
           </Content>

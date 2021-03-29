@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
+
 import { ApiCall } from './ApiCall';
-
 import './HomePage.css';
-import ListContent from './ListContent'
-
-import {
-  FormControl,
-  Select,
-  MenuItem,
-  Card
-} from '@material-ui/core';
 
 function HomePage() {
   const [data, setData] = useState([])
-  const [selected, setSelected] = useState('')
-  const [trips, setTrips] = useState({})
-  const [loaded, setLoaded] = useState(false)
+  const [trip, setTrip] = useState([])
 
   useEffect(() => {
     const getData = async() =>{
       await ApiCall("trip?filter=ongoing", '')
         .then(result => {
-        setData(result.data['results']);
+          setData(result.data['results']);
       })
       .catch((err) => {
           console.log(err);
@@ -31,32 +22,10 @@ function HomePage() {
     getData();
   }, [])
 
-  useEffect(() => {
-    const loadData = async() =>{
-      await ApiCall(`trip/detail-view?request_id=${selected}`,'')
-      .then(result =>{
-          setTrips(result.data);
-          setLoaded(true)
-          console.log(result.data)
-
-      })
-      .catch((err) => {
-          console.log(err);
-      })
-    }
-
-    loadData();
-  },[selected])
-
-  const handleChange = async (event) => {
-    const sValue = event.target.value
-
-    await ApiCall(`trip/detail-view?request_id=${sValue}`,'')
+  const tripDetailView = (trip_id) => {
+    ApiCall(`trip/detail-view?request_id=${trip_id}`,'')
     .then(result =>{
-        setTrips(result.data);
-        setLoaded(true)
-        setSelected(sValue)
-        console.log(result.data)
+      console.log(result.data)
 
     })
     .catch((err) => {
@@ -65,29 +34,41 @@ function HomePage() {
   }
 
   return (
-      <div className='container col-md-10'>
-        <div className="trip__select">
-          <div className="trip__selectTitle">
-            <h3>Select Trip to display Information </h3>
+      <div className='main_container col-md-10'>
+        <div className="trip__container">
+          <div className="trip__title">
+            <h3>List of ongoing processes</h3>
           </div>
-          <div className="trip__selectDropdown">
-            <FormControl>
-                <Select
-                variant="outlined"
-                value={selected}
-                onChange={handleChange}>
-                    {data.map((trip) => (
-                      <MenuItem key={trip.id} value={trip.id}>{trip.title}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-          </div>
-          </div>
-          {loaded && (
-            <Card>
-              <ListContent trips={trips} />
-            </Card>
-          )}
+          <table>
+            <thead>
+              <tr>
+                <td>Title</td>
+                <td>Reference Number</td>
+                <td>Expense</td>
+                <td>Profit Margin</td>
+                <td>Status</td>
+              </tr>
+            </thead>
+            <tbody className="trip__list">
+              {
+                data.map((trip) => (
+                  <tr key = {trip.id}>
+                    <td value={trip.title}>{trip.title}</td>
+                    <td value={trip.reference_number}>{trip.reference_number}</td>
+                    <td value={trip.total_expense}>{trip.total_expense? <p>N/A</p>:null }</td>
+                    <td value={trip.profit_margin}>{trip.profit_margin? <p>N/A</p>:null }</td>
+                    <td value={trip.status}>{trip.status}</td>
+                    <td>
+                      <button value={trip.id} className="btn btn-link">
+                        <Link className='nav-link' onClick={tripDetailView(trip.id)} to="/trip-details">View</Link>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
   );
 
